@@ -9,7 +9,7 @@ import os
 app = Flask(__name__)
 
 # MongoDB 연결 정보 (Render 환경에서 환경변수로 설정)
-MONGO_URI = os.environ.get("MONGO_URI")  # Render에서 설정
+MONGO_URI = os.environ.get("mongodb+srv://admin:admin@bchdaeuo.dnvoqco.mongodb.net/?retryWrites=true&w=majority&appName=Bchdaeuo")  # Render에서 설정
 client = MongoClient(MONGO_URI)
 db = client["workshop"]
 fs = GridFS(db)
@@ -50,4 +50,5 @@ def home():
     return redirect(url_for("workshop"))
 
 if __name__ == "__main__":
+
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
