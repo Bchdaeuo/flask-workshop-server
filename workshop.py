@@ -10,10 +10,13 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# MongoDB 연결 정보 (Render 환경에서 환경변수로 설정)
-MONGO_URI = os.environ.get("mongodb+srv://admin:admin@bchdaeuo.dnvoqco.mongodb.net/?retryWrites=true&w=majority&appName=Bchdaeuo")  # 환경변수에서 MongoDB URI 읽기
+MONGO_URI = os.environ.get("MONGO_URI")
+
+if not MONGO_URI:
+    raise ValueError("MongoDB URI가 환경변수에 설정되지 않았습니다!")
+
 client = MongoClient(MONGO_URI)
-db = client["workshop"]
+db = client["workshop"]  # workshop 데이터베이스 사용
 fs = GridFS(db)
 
 # 테스트용 홈
@@ -64,5 +67,6 @@ def download(file_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 
