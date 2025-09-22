@@ -17,7 +17,7 @@ fs = GridFS(db)
 # 테스트용 홈
 @app.route("/")
 def home():
-    return "Server is running!"
+    return "창작마당 서버가 원활히 작동하고 있습니다."
 
 # 업로드 처리
 @app.route("/upload", methods=["POST"])
@@ -62,3 +62,4 @@ def download(file_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
