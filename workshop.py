@@ -1,4 +1,5 @@
 from flask import Flask, request, send_file, redirect, url_for, jsonify
+from flask_cors import CORS
 from pymongo import MongoClient
 from gridfs import GridFS
 from bson.objectid import ObjectId
@@ -7,6 +8,7 @@ import datetime
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 # MongoDB 연결 정보 (Render 환경에서 환경변수로 설정)
 MONGO_URI = os.environ.get("mongodb+srv://admin:admin@bchdaeuo.dnvoqco.mongodb.net/?retryWrites=true&w=majority&appName=Bchdaeuo")  # 환경변수에서 MongoDB URI 읽기
@@ -62,4 +64,5 @@ def download(file_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
