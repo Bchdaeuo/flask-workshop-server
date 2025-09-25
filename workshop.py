@@ -1,4 +1,5 @@
 from flask import Flask, request, send_file, redirect, url_for, jsonify
+from datetime import datetime, UTC
 from flask_cors import CORS
 from pymongo import MongoClient
 from gridfs import GridFS
@@ -38,7 +39,7 @@ def upload():
         file_id = fs.put(file, filename=file.filename, metadata={
             "title": title,
             "description": description,
-            "created_at": datetime.datetime.utcnow()
+            "created_at": datetime.now(UTC)
         })
 
         return jsonify({"message": "File uploaded", "file_id": str(file_id)}), 200
@@ -73,6 +74,7 @@ def download(file_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 
 
