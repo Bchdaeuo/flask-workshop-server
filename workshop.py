@@ -72,5 +72,15 @@ def download(file_id):
     except Exception as e:
         return jsonify({"error": "File not found", "details": str(e)}), 404
 
+@app.route("/filedata/<file_id>")
+def filedata(file_id):
+    try:
+        file = fs.get(ObjectId(file_id))
+        import json
+        content = json.loads(file.read())
+        return jsonify(content)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 404
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
