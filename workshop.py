@@ -63,6 +63,7 @@ def list_files():
             "filename": f.filename,
             "title": f.metadata.get("title"),
             "description": f.metadata.get("description"),
+            "nickname": f.metadata.get("nickname", "알 수 없음"),
             "created_at": created_at_str
         })
     return jsonify(files)
@@ -87,6 +88,7 @@ def filedata(file_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 
 
