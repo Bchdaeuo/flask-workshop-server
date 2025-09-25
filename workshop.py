@@ -1,11 +1,10 @@
-from flask import Flask, request, send_file, redirect, url_for, jsonify
+from flask import Flask, request, send_file, jsonify
 from datetime import datetime, UTC
 from flask_cors import CORS
 from pymongo import MongoClient
 from gridfs import GridFS
 from bson.objectid import ObjectId
 from io import BytesIO
-import datetime
 import os
 
 app = Flask(__name__)
@@ -14,18 +13,16 @@ CORS(app)
 MONGO_URI = os.environ.get("MONGO_URI")
 
 if not MONGO_URI:
-    raise ValueError("MongoDB URI가 환경변수에 설정되지 않았습니다!")
+    raise ValueError("MongoDB URI이 환경변수에 설정되지 않았습니다!")
 
 client = MongoClient(MONGO_URI)
-db = client["workshop"]  # workshop 데이터베이스 사용
+db = client["workshop"]
 fs = GridFS(db)
 
-# 테스트용 홈
 @app.route("/")
 def home():
     return "창작마당 서버가 원활히 작동하고 있습니다."
 
-# 업로드 처리
 @app.route("/upload", methods=["POST"])
 def upload():
     try:
@@ -49,21 +46,24 @@ def upload():
         traceback.print_exc()
         return jsonify({"error": "Upload failed", "details": str(e)}), 500
 
-# 업로드된 파일 목록 확인
 @app.route("/files")
 def list_files():
     files = []
     for f in fs.find().sort("metadata.created_at", -1):
+        created_at = f.metadata.get("created_at")
+        if created_at:
+            created_at_str = created_at.isoformat()
+        else:
+            created_at_str = None
         files.append({
             "file_id": str(f._id),
             "filename": f.filename,
             "title": f.metadata.get("title"),
             "description": f.metadata.get("description"),
-            "created_at": f.metadata.get("created_at").isoformat()
+            "created_at": created_at_str
         })
     return jsonify(files)
 
-# 파일 다운로드
 @app.route("/download/<file_id>")
 def download(file_id):
     try:
@@ -74,8 +74,3 @@ def download(file_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
-
-
-
-
