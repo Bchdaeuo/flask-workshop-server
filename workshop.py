@@ -27,20 +27,26 @@ def home():
 # 업로드 처리
 @app.route("/upload", methods=["POST"])
 def upload():
-    file = request.files.get("file")
-    title = request.form.get("title", "No Title")
-    description = request.form.get("description", "No Description")
+    try:
+        file = request.files.get("file")
+        title = request.form.get("title", "No Title")
+        description = request.form.get("description", "No Description")
 
-    if not file:
-        return jsonify({"error": "No file provided"}), 400
+        if not file:
+            return jsonify({"error": "No file provided"}), 400
 
-    file_id = fs.put(file, filename=file.filename, metadata={
-        "title": title,
-        "description": description,
-        "created_at": datetime.datetime.utcnow()
-    })
+        file_id = fs.put(file, filename=file.filename, metadata={
+            "title": title,
+            "description": description,
+            "created_at": datetime.datetime.utcnow()
+        })
 
-    return jsonify({"message": "File uploaded", "file_id": str(file_id)}), 200
+        return jsonify({"message": "File uploaded", "file_id": str(file_id)}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Upload failed", "details": str(e)}), 500
 
 # 업로드된 파일 목록 확인
 @app.route("/files")
@@ -67,6 +73,7 @@ def download(file_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 
 
