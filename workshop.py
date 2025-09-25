@@ -29,8 +29,8 @@ def upload():
         file = request.files.get("file")
         title = request.form.get("title", "No Title")
         description = request.form.get("description", "No Description")
-        nickname = request.form.get("nickname", userid_temp)
         userid_temp = request.form.get("userid_temp", "Unknown User")
+        nickname = request.form.get("nickname", userid_temp)
 
         if not file:
             return jsonify({"error": "No file provided"}), 400
@@ -88,5 +88,6 @@ def filedata(file_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 
