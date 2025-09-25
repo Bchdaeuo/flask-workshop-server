@@ -39,7 +39,6 @@ def upload():
             "title": title,
             "description": description,
             "nickname": nickname,
-            "userid_temp": userid_temp,
             "created_at": datetime.now(UTC)
         })
 
@@ -88,6 +87,7 @@ def filedata(file_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 
 
