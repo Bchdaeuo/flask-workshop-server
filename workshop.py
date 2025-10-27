@@ -86,10 +86,36 @@ def filedata(file_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 404
 
+# 서버 상태 확인
+@app.route("/status", methods=["GET"])
+def status():
+    server_status = {
+        "server": "online",
+        "message": "로그인 및 회원가입 서버가 정상 작동 중입니다."
+    }
+
+    try:
+        client.admin.command("ping")
+        server_status["database"] = "online"
+    except Exception as e:
+        server_status["database"] = "offline"
+        server_status["db_error"] = str(e)
+
+    return jsonify(server_status)
+
+# 서버 사용량 확인
+@app.route("/metrics")
+def metrics():
+    cpu = psutil.cpu_percent(interval=0.5)
+    mem = psutil.virtual_memory()
+    net = psutil.net_io_counters()
+
+    return jsonify({
+        "cpu_percent": cpu,
+        "memory_percent": mem.percent,
+        "sent_MB": round(net.bytes_sent / 1024 / 1024, 2),
+        "recv_MB": round(net.bytes_recv / 1024 / 1024, 2)
+    })
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
-
-
-
-
