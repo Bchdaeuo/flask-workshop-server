@@ -5,7 +5,7 @@ from pymongo import MongoClient
 from gridfs import GridFS
 from bson.objectid import ObjectId
 from io import BytesIO
-import os
+import os, psutil
 
 app = Flask(__name__)
 CORS(app)
@@ -119,3 +119,4 @@ def metrics():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
